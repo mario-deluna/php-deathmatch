@@ -1,0 +1,25 @@
+{
+    "name": "mario-deluna/php-deathmatch",
+    "authors": [
+        {
+            "name": "Mario Döring",
+            "email": "mario@clancats.com"
+        }
+    ],
+    "require": {
+        "ext-glfw": "*",
+        "mario-deluna/php-game-framework": "dev-master"
+    },
+    "autoload": {
+        "psr-4": {
+        	"PD\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "PD\\Tests\\": "tests/"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-source": true
+}

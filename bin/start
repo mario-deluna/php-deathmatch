@@ -1,0 +1,178 @@
+#!/usr/bin/env php
+<?php 
+if (!defined('DS')) { define('DS', DIRECTORY_SEPARATOR); }
+/**
+ *---------------------------------------------------------------
+ * Autoloader / Compser
+ *---------------------------------------------------------------
+ *
+ * We need to access our dependencies & autloader..
+ */
+require __DIR__ . DS . '..' . DS . 'vendor' . DS . 'autoload.php';
+
+/**
+ * Paths
+ */
+define('PATH_RESOURCES', __DIR__ . DS . '..' . DS . 'resources');
+define('PATH_SHADER', PATH_RESOURCES . DS . 'shader');
+
+// dependencies
+use PGF\{
+    Window, 
+    Shader\Manager as ShaderManager,
+    Drawing\TexturedMesh
+};
+
+/**
+ *---------------------------------------------------------------
+ * Prepare and configure the window.
+ *---------------------------------------------------------------
+ *
+ * Hints etc.
+ */
+$window = new Window;
+
+// configure the window
+$window->setHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+$window->setHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+$window->setHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+$window->setHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+
+// open it
+$window->open('PHP Deathmatch');
+
+// enable vsync
+$window->setSwapInterval(1);
+
+// enable depth testing
+glEnable(GL_DEPTH_TEST);
+
+/**
+ * Prepare Shaders
+ */
+$shaders = new ShaderManager();
+foreach(['base3d'] as $shaderName) {
+    $shaders->load($shaderName, PATH_SHADER . '/'.$shaderName.'.vert.glsl', PATH_SHADER . '/'.$shaderName.'.frag.glsl');
+}
+
+var_dump($shaders); die;
+
+// we created the shader program so we can free
+// the sources
+unset($vertexShader, $fragmentShader);
+
+/**
+ * Create the mesh 
+ */
+$cube = new TexturedMesh([
+   1,          1,          -1,         0.577349,          0.577349,          -0.577349,         0,          0,
+   -1,         -1,         -1,         -0.577349,         -0.577349,         -0.577349,         1,          1,
+   -1,         1,          -1,         -0.577349,         0.577349,          -0.577349,         0,          1,
+   -1,         1,          1,          -0.577349,         0.577349,          0.577349,          1,          0,
+   0.999999,   -1.000001,  1,          0.577349,          -0.577349,         0.577349,          0,          1,
+   1,          0.999999,   1,          0.577349,          0.577349,          0.577349,          0,          0,
+   1,          0.999999,   1,          0.577349,          0.577349,          0.577349,          1,          0,
+   1,          -1,         -1,         0.577349,          -0.577349,         -0.577349,         0,          1,
+   1,          1,          -1,         0.577349,          0.577349,          -0.577349,         0,          0,
+   0.999999,   -1.000001,  1,          0.577349,          -0.577349,         0.577349,          1,          0,
+   -1,         -1,         -1,         -0.577349,         -0.577349,         -0.577349,         0,          1,
+   1,          -1,         -1,         0.577349,          -0.577349,         -0.577349,         0,          0,
+   -1,         -1,         -1,         -0.577349,         -0.577349,         -0.577349,         0,          0,
+   -1,         1,          1,          -0.577349,         0.577349,          0.577349,          1,          1,
+   -1,         1,          -1,         -0.577349,         0.577349,          -0.577349,         0,          1,
+   1,          1,          -1,         0.577349,          0.577349,          -0.577349,         1,          0,
+   -1,         1,          1,          -0.577349,         0.577349,          0.577349,          0,          1,
+   1,          0.999999,   1,          0.577349,          0.577349,          0.577349,          0,          0,
+   1,          1,          -1,         0.577349,          0.577349,          -0.577349,         0,          0,
+   1,          -1,         -1,         0.577349,          -0.577349,         -0.577349,         1,          0,
+   -1,         -1,         -1,         -0.577349,         -0.577349,         -0.577349,         1,          1,
+   -1,         1,          1,          -0.577349,         0.577349,          0.577349,          1,          0,
+   -1,         -1,         1,          -0.577349,         -0.577349,         0.577349,          1,          1,
+   0.999999,   -1.000001,  1,          0.577349,          -0.577349,         0.577349,          0,          1,
+   1,          0.999999,   1,          0.577349,          0.577349,          0.577349,          1,          0,
+   0.999999,   -1.000001,  1,          0.577349,          -0.577349,         0.577349,          1,          1,
+   1,          -1,         -1,         0.577349,          -0.577349,         -0.577349,         0,          1,
+   0.999999,   -1.000001,  1,          0.577349,          -0.577349,         0.577349,          1,          0,
+   -1,         -1,         1,          -0.577349,         -0.577349,         0.577349,          1,          1,
+   -1,         -1,         -1,         -0.577349,         -0.577349,         -0.577349,         0,          1,
+   -1,         -1,         -1,         -0.577349,         -0.577349,         -0.577349,         0,          0,
+   -1,         -1,         1,          -0.577349,         -0.577349,         0.577349,          1,          0,
+   -1,         1,          1,          -0.577349,         0.577349,          0.577349,          1,          1,
+   1,          1,          -1,         0.577349,          0.577349,          -0.577349,         1,          0,
+   -1,         1,          -1,         -0.577349,         0.577349,          -0.577349,         1,          1,
+   -1,         1,          1,          -0.577349,         0.577349,          0.577349,          0,          1,
+
+]);
+
+$suzane = new TexturedMesh(require __DIR__ . '/meshes/suzane.php');
+
+/** 
+ * Texture 
+ */
+$texture;
+glGenTextures(1, $texture);
+glBindTexture(GL_TEXTURE_2D, $texture); // all upcoming GL_TEXTURE_2D operations now have effect on this texture object
+// set the texture wrapping parameters
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);   // set texture wrapping to GL_REPEAT (default wrapping method)
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+// set texture filtering parameters
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+$data = stbi_load(__DIR__ . '/images/noiseb.png', $width, $height, $nrChannels, 0);
+if ($data) {
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, $width, $height, 0, GL_RGB, GL_UNSIGNED_BYTE, $data);
+    glGenerateMipmap(GL_TEXTURE_2D);
+} else {
+    die('Could not load texture.');
+}
+
+//glViewport(0, 0, 800, 600);
+
+/**
+ * Main loop
+ */
+while (!$window->shouldClose())
+{
+	$window->clearColor(0.7, 0.7, 0.7, 1);
+	$window->clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    // bind the texture
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, $texture);  
+
+    $shader->use();
+
+    // create transformations
+    $model = new glm\mat4();
+    $view = new glm\mat4();
+    $projection = new glm\mat4();
+    $cameraPos = new glm\vec3(0.0, 0.0, -10.0);
+
+    $model = glm\translate($model, glm\vec3(0.0, 0.0, 0.0));
+    $model = glm\rotate($model, (float)glfwGetTime() * 50, new glm\vec3(0.0, 1.0, 0.0));
+    $model = glm\rotate($model, (float)glfwGetTime() * 20, new glm\vec3(0.0, 0.0, 1.0));
+    $view  = glm\translate($view, $cameraPos);
+    $projection = glm\perspective(45.0, (float)800 / (float)600, 0.1, 100.0);
+
+    glUniformMatrix4fv(glGetUniformLocation($shader->id(), "transform"), 1, false, glm\value_ptr($model));
+    glUniformMatrix4fv(glGetUniformLocation($shader->id(), "view"), 1, false, glm\value_ptr($view));
+    glUniformMatrix4fv(glGetUniformLocation($shader->id(), "projection"), 1, false, glm\value_ptr($projection));
+
+    $cube->draw();
+
+    for ($i=0;$i<10;$i++)
+    {
+        $model = glm\translate($model, glm\vec3(3.0, 0.0, 0.0));
+        glUniformMatrix4fv(glGetUniformLocation($shader->id(), "transform"), 1, false, glm\value_ptr($model));
+        $suzane->draw();
+    }
+   
+
+    
+
+    // swap
+    $window->swapBuffers();
+    $window->pollEvents();
+}
+
