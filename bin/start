@@ -15,12 +15,25 @@ require __DIR__ . DS . '..' . DS . 'vendor' . DS . 'autoload.php';
  */
 define('PATH_RESOURCES', __DIR__ . DS . '..' . DS . 'resources');
 define('PATH_SHADER', PATH_RESOURCES . DS . 'shader');
+define('PATH_TEXUTRE', PATH_RESOURCES . DS . 'textures');
 
 // dependencies
 use PGF\{
-    Window, 
+    Window,
+    Scene, 
     Shader\Manager as ShaderManager,
-    Drawing\TexturedMesh
+
+    Camera\PerspectiveCamera,
+
+    System\Draw3DSystem,
+
+    // primitives
+    Entity\Primitives\Cube
+};
+
+use glm\{
+    vec2, vec3, vec4,
+    mat4
 };
 
 /**
@@ -52,59 +65,38 @@ glEnable(GL_DEPTH_TEST);
  */
 $shaders = new ShaderManager();
 foreach(['base3d'] as $shaderName) {
-    $shaders->load($shaderName, PATH_SHADER . '/'.$shaderName.'.vert.glsl', PATH_SHADER . '/'.$shaderName.'.frag.glsl');
+    $shaders->load($shaderName, 
+        PATH_SHADER . '/'.$shaderName.'.vert.glsl', 
+        PATH_SHADER . '/'.$shaderName.'.frag.glsl'
+    );
+
 }
 
-var_dump($shaders); die;
-
-// we created the shader program so we can free
-// the sources
-unset($vertexShader, $fragmentShader);
+/**
+ * Create a camera
+ */
+$camera = new PerspectiveCamera(new vec3(0.0, 0.0, 0.0));
 
 /**
- * Create the mesh 
+ * Create a new scene
  */
-$cube = new TexturedMesh([
-   1,          1,          -1,         0.577349,          0.577349,          -0.577349,         0,          0,
-   -1,         -1,         -1,         -0.577349,         -0.577349,         -0.577349,         1,          1,
-   -1,         1,          -1,         -0.577349,         0.577349,          -0.577349,         0,          1,
-   -1,         1,          1,          -0.577349,         0.577349,          0.577349,          1,          0,
-   0.999999,   -1.000001,  1,          0.577349,          -0.577349,         0.577349,          0,          1,
-   1,          0.999999,   1,          0.577349,          0.577349,          0.577349,          0,          0,
-   1,          0.999999,   1,          0.577349,          0.577349,          0.577349,          1,          0,
-   1,          -1,         -1,         0.577349,          -0.577349,         -0.577349,         0,          1,
-   1,          1,          -1,         0.577349,          0.577349,          -0.577349,         0,          0,
-   0.999999,   -1.000001,  1,          0.577349,          -0.577349,         0.577349,          1,          0,
-   -1,         -1,         -1,         -0.577349,         -0.577349,         -0.577349,         0,          1,
-   1,          -1,         -1,         0.577349,          -0.577349,         -0.577349,         0,          0,
-   -1,         -1,         -1,         -0.577349,         -0.577349,         -0.577349,         0,          0,
-   -1,         1,          1,          -0.577349,         0.577349,          0.577349,          1,          1,
-   -1,         1,          -1,         -0.577349,         0.577349,          -0.577349,         0,          1,
-   1,          1,          -1,         0.577349,          0.577349,          -0.577349,         1,          0,
-   -1,         1,          1,          -0.577349,         0.577349,          0.577349,          0,          1,
-   1,          0.999999,   1,          0.577349,          0.577349,          0.577349,          0,          0,
-   1,          1,          -1,         0.577349,          0.577349,          -0.577349,         0,          0,
-   1,          -1,         -1,         0.577349,          -0.577349,         -0.577349,         1,          0,
-   -1,         -1,         -1,         -0.577349,         -0.577349,         -0.577349,         1,          1,
-   -1,         1,          1,          -0.577349,         0.577349,          0.577349,          1,          0,
-   -1,         -1,         1,          -0.577349,         -0.577349,         0.577349,          1,          1,
-   0.999999,   -1.000001,  1,          0.577349,          -0.577349,         0.577349,          0,          1,
-   1,          0.999999,   1,          0.577349,          0.577349,          0.577349,          1,          0,
-   0.999999,   -1.000001,  1,          0.577349,          -0.577349,         0.577349,          1,          1,
-   1,          -1,         -1,         0.577349,          -0.577349,         -0.577349,         0,          1,
-   0.999999,   -1.000001,  1,          0.577349,          -0.577349,         0.577349,          1,          0,
-   -1,         -1,         1,          -0.577349,         -0.577349,         0.577349,          1,          1,
-   -1,         -1,         -1,         -0.577349,         -0.577349,         -0.577349,         0,          1,
-   -1,         -1,         -1,         -0.577349,         -0.577349,         -0.577349,         0,          0,
-   -1,         -1,         1,          -0.577349,         -0.577349,         0.577349,          1,          0,
-   -1,         1,          1,          -0.577349,         0.577349,          0.577349,          1,          1,
-   1,          1,          -1,         0.577349,          0.577349,          -0.577349,         1,          0,
-   -1,         1,          -1,         -0.577349,         0.577349,          -0.577349,         1,          1,
-   -1,         1,          1,          -0.577349,         0.577349,          0.577349,          0,          1,
+$scene = new Scene;
+$scene->addSystem(new Draw3DSystem($shaders->get('base3d'), $camera));
 
-]);
+/**
+ * Load the map
+ */
+$map = "
+*****
+*   *
+*   *
+*   *
+*****
+";
 
-$suzane = new TexturedMesh(require __DIR__ . '/meshes/suzane.php');
+$floor = new Cube(new vec3(0, -20, 0), new vec3(10, 0.5, 10), new vec3(0, 0, 0));
+$scene->entities->add($floor);
+
 
 /** 
  * Texture 
@@ -119,7 +111,7 @@ glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-$data = stbi_load(__DIR__ . '/images/noiseb.png', $width, $height, $nrChannels, 0);
+$data = stbi_load(PATH_TEXUTRE . '/noiseb.png', $width, $height, $nrChannels, 0);
 if ($data) {
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, $width, $height, 0, GL_RGB, GL_UNSIGNED_BYTE, $data);
     glGenerateMipmap(GL_TEXTURE_2D);
@@ -129,6 +121,12 @@ if ($data) {
 
 //glViewport(0, 0, 800, 600);
 
+
+glfwSetInputMode($window->getContext(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);  
+
+$lx = $ly = 0;
+$camera->moveBackward(50);
+
 /**
  * Main loop
  */
@@ -136,43 +134,35 @@ while (!$window->shouldClose())
 {
 	$window->clearColor(0.7, 0.7, 0.7, 1);
 	$window->clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    $window->pollEvents();
 
     // bind the texture
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, $texture);  
+    glBindTexture(GL_TEXTURE_2D, $texture);
 
-    $shader->use();
-
-    // create transformations
-    $model = new glm\mat4();
-    $view = new glm\mat4();
-    $projection = new glm\mat4();
-    $cameraPos = new glm\vec3(0.0, 0.0, -10.0);
-
-    $model = glm\translate($model, glm\vec3(0.0, 0.0, 0.0));
-    $model = glm\rotate($model, (float)glfwGetTime() * 50, new glm\vec3(0.0, 1.0, 0.0));
-    $model = glm\rotate($model, (float)glfwGetTime() * 20, new glm\vec3(0.0, 0.0, 1.0));
-    $view  = glm\translate($view, $cameraPos);
-    $projection = glm\perspective(45.0, (float)800 / (float)600, 0.1, 100.0);
-
-    glUniformMatrix4fv(glGetUniformLocation($shader->id(), "transform"), 1, false, glm\value_ptr($model));
-    glUniformMatrix4fv(glGetUniformLocation($shader->id(), "view"), 1, false, glm\value_ptr($view));
-    glUniformMatrix4fv(glGetUniformLocation($shader->id(), "projection"), 1, false, glm\value_ptr($projection));
-
-    $cube->draw();
-
-    for ($i=0;$i<10;$i++)
-    {
-        $model = glm\translate($model, glm\vec3(3.0, 0.0, 0.0));
-        glUniformMatrix4fv(glGetUniformLocation($shader->id(), "transform"), 1, false, glm\value_ptr($model));
-        $suzane->draw();
+    if ($window->getKeyState(GLFW_KEY_W) === GLFW_PRESS) {
+        $camera->moveForward(1.0);
+    } elseif ($window->getKeyState(GLFW_KEY_S) === GLFW_PRESS) {
+        $camera->moveBackward(1.0);
     }
-   
 
-    
+    if ($window->getKeyState(GLFW_KEY_A) === GLFW_PRESS) {
+        $camera->moveLeft(1.0);
+    } elseif ($window->getKeyState(GLFW_KEY_D) === GLFW_PRESS) {
+        $camera->moveRight(1.0);
+    }
+
+    glfwGetCursorPos($window->getContext(), $x, $y);
+
+    $camera->updateAngel(($x - $lx), ($y - $ly) * -1);
+    $lx = $x; $ly = $y;
+
+    //$camera->printDebug();
+
+    $scene->update();
+    $scene->draw();
 
     // swap
     $window->swapBuffers();
-    $window->pollEvents();
 }
 
