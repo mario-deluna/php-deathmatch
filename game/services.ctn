@@ -1,0 +1,11 @@
+/**
+ * Window
+ * 
+ * Loading this dependecy will alredy open the window
+ */
+@window: PGF\Window
+
+/**
+ * The main loop
+ */
+@loop: PD\MainLoop(@window, @scene.main)

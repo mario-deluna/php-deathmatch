@@ -1,0 +1,9 @@
+/**
+ * Window configuration
+ *
+ *
+ * ----------------------------------------
+ */
+:window.title: 'PHP Deathmatch'
+:window.width: 800
+:window.height: 600 

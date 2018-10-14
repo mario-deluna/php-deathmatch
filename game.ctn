@@ -1,0 +1,19 @@
+ /**
+  * Import the configuration
+  */
+import game/config
+
+ /**
+  * Import the services
+  */
+import game/services
+
+ /**
+  * Import the shaders
+  */
+import game/shaders
+
+ /**
+  * Import the scenes
+  */
+import game/scenes

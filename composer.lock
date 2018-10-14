@@ -4,8 +4,38 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "1a8c1686b30d01da4c7e4607b43afb03",
+    "content-hash": "1da5251ccd9c36dfb7aa1e37646667d1",
     "packages": [
+        {
+            "name": "clancats/container",
+            "version": "v1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ClanCats/Container.git",
+                "reference": "156820a516afb9a89791226be221e02dbfb5a5ce"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ClanCats/Container/zipball/156820a516afb9a89791226be221e02dbfb5a5ce",
+                "reference": "156820a516afb9a89791226be221e02dbfb5a5ce",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "ClanCats\\Container\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "ClanCats IoC Container.",
+            "time": "2018-04-11T16:26:19+00:00"
+        },
         {
             "name": "mario-deluna/php-game-framework",
             "version": "dev-master",

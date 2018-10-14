@@ -1,0 +1,4 @@
+/**
+ * The main scene
+ */
+@scene.main: PD\Scene\MainScene

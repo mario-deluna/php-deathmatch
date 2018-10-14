@@ -1,40 +1,18 @@
 #!/usr/bin/env php
-<?php 
+<?php
+set_time_limit(0);
+
+// DS
 if (!defined('DS')) { define('DS', DIRECTORY_SEPARATOR); }
+
 /**
  *---------------------------------------------------------------
- * Autoloader / Compser
+ * Bootstrap
  *---------------------------------------------------------------
  *
  * We need to access our dependencies & autloader..
  */
-require __DIR__ . DS . '..' . DS . 'vendor' . DS . 'autoload.php';
-
-/**
- * Paths
- */
-define('PATH_RESOURCES', __DIR__ . DS . '..' . DS . 'resources');
-define('PATH_SHADER', PATH_RESOURCES . DS . 'shader');
-define('PATH_TEXUTRE', PATH_RESOURCES . DS . 'textures');
-
-// dependencies
-use PGF\{
-    Window,
-    Scene, 
-    Shader\Manager as ShaderManager,
-
-    Camera\PerspectiveCamera,
-
-    System\Draw3DSystem,
-
-    // primitives
-    Entity\Primitives\Cube
-};
-
-use glm\{
-    vec2, vec3, vec4,
-    mat4
-};
+$container = require __DIR__ . DS . '..' . DS . 'bootstrap.php';
 
 /**
  *---------------------------------------------------------------
@@ -43,7 +21,7 @@ use glm\{
  *
  * Hints etc.
  */
-$window = new Window;
+$window = $container->get('window');
 
 // configure the window
 $window->setHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -52,25 +30,37 @@ $window->setHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 $window->setHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
 // open it
-$window->open('PHP Deathmatch');
+$window->open(
+    $container->getParameter('window.title'),
+    $container->getParameter('window.width'),
+    $container->getParameter('window.height')
+);
 
 // enable vsync
 $window->setSwapInterval(1);
 
-// enable depth testing
-glEnable(GL_DEPTH_TEST);
+// get the main loop
+$loop = $container->get('loop');
+
+// start the main loop
+$loop->start();
+
+die;
+
 
 /**
  * Prepare Shaders
  */
 $shaders = new ShaderManager();
-foreach(['base3d'] as $shaderName) {
-    $shaders->load($shaderName, 
-        PATH_SHADER . '/'.$shaderName.'.vert.glsl', 
-        PATH_SHADER . '/'.$shaderName.'.frag.glsl'
-    );
 
-}
+$shader = new Simple3DShader();
+$shader->use();
+$shader->setProjectionMatrx(\glm\value_ptr($camera->getProjectionMatrx()));
+$shader->setViewMatrx(\glm\value_ptr($camera->getViewMatrix()));
+$shader->setViewPosition($camera->position);
+$shader->setLightPosition(\glm\vec3(20, 1, 50));
+
+die;
 
 /**
  * Create a camera
@@ -97,7 +87,7 @@ $map = "
 $gun = new Cube(new vec3(0, 0, 0), new vec3(1, 1, 1), new vec3(0, 0, 0));
 $scene->entities->add($gun);
 
-$gun2 = new Cube(new vec3(0, 0, 0), new vec3(1, 1, 1), new vec3(0, 0, 0));
+$gun2 = new Cube(new vec3(0, 10, 0), new vec3(1, 1, 1), new vec3(0, 0, 0));
 $scene->entities->add($gun2);
 
 $floor = new Cube(new vec3(0, -20, 0), new vec3(10, 0.5, 10), new vec3(0, 0, 0));
@@ -145,6 +135,7 @@ $camera->setAngel(-90, 0);
  */
 while (!$window->shouldClose())
 {   
+    // poll window events
     $window->pollEvents();
 
     // bind the texture
@@ -163,6 +154,7 @@ while (!$window->shouldClose())
         $camera->moveRight(1.0);
     }
 
+
     glfwGetCursorPos($window->getContext(), $x, $y);
     $offx = ($x - $lx) * 0.2;
     $offy = ($y - $ly) * -0.2;
@@ -172,23 +164,21 @@ while (!$window->shouldClose())
     $camera->updateAngel($offx, $offy);
     $lx = $x; $ly = $y;
 
-    //$camera->printDebug();
+    $gun2->transform->position = clone $camera->position;
+    $gun2->transform->rotation->x = -$camera->pitch;
+    $gun2->transform->rotation->y = $camera->yaw + 90;
+    $gun2->transform->moveForward(20);
+    $gun2->transform->rotation->x -= 10;
+    $gun2->transform->rotation->y -= 10;
+    $gun2->transform->moveRight(6);
+    $gun2->transform->moveDown(6);
 
-    $gun->position = clone $camera->position;
-    // $gun->position->z += sin(\glm\radians($camera->yaw));
-    // $gun->position->x += cos(\glm\radians($camera->yaw));
-    $gun->position->y -= 5;
-    $gun->position = \glm\vec3(
-        $gun->position->x + $camera->frontVector->x * 10,
-        $gun->position->y + $camera->frontVector->y * 5,
-        $gun->position->z + $camera->frontVector->z * -10
-    );
+    $gun2->transform->__transformDirty = true;
 
-    $gun->rotation->y = $camera->yaw + 90;
-    $gun->__transformDirty = true;
-
-    $gun2->rotation->y += 1;
-    $gun2->__transformDirty = true;
+    if ($window->getKeyState(GLFW_KEY_SPACE) === GLFW_PRESS) {
+        $bullet = new Cube(clone $gun2->transform->position, new vec3(1, 1, 1), clone $gun2->transform->rotation);
+        $scene->entities->add($bullet);
+    }
 
     $scene->update();
 
@@ -200,4 +190,3 @@ while (!$window->shouldClose())
     // swap
     $window->swapBuffers();
 }
-

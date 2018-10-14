@@ -1,0 +1,12 @@
+/**
+ * Shader manager
+ *
+ * with some basic shaders
+ */
+@shader_manager: PGF\Shader\Manager
+	- set('simple3D', @shader.simple3D)
+
+/**
+ * Simple 3D Shader
+ */
+@shader.simple3D: PGF\Shaders\Simple3DShader

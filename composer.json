@@ -8,6 +8,7 @@
     ],
     "require": {
         "ext-glfw": "*",
+        "clancats/container": "^1.0",
         "mario-deluna/php-game-framework": "dev-master"
     },
     "autoload": {
@@ -19,6 +20,11 @@
         "psr-4": {
             "PD\\Tests\\": "tests/"
         }
+    },
+    "scripts": {
+        "post-autoload-dump": [
+            "ClanCats\\Container\\ComposerContainerFileLoader::generateMap"
+        ]
     },
     "minimum-stability": "dev",
     "prefer-source": true
