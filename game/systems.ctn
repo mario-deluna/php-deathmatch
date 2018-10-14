@@ -2,3 +2,8 @@
  * Draw 3D system
  */
 @system.draw3D: PD\System\Draw3DSystem(@shader.simple3D, @camera.main_perspective, @mesh_manager)
+
+/**
+ * Camera system
+ */
+@system.camera: PD\System\CameraSystem(@camera.main_perspective, @window)
