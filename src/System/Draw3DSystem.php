@@ -52,6 +52,7 @@ class Draw3DSystem extends System
 	 */
 	public function update(Registry $entities) 
 	{
+		//$this->camera->printDebug();
 	}
 
 	/**
@@ -65,19 +66,28 @@ class Draw3DSystem extends System
 		$this->shader->setProjectionMatrx(\glm\value_ptr($this->camera->getProjectionMatrx()));
 		$this->shader->setViewMatrx(\glm\value_ptr($this->camera->getViewMatrix()));
 		$this->shader->setViewPosition($this->camera->position);
-		$this->shader->setLightPosition(\glm\vec3(20, 1, 50));
+		$this->shader->setLightPosition(\glm\vec3(0, 1000, 0));
 
-		// set the color 
-		$this->shader->uniform1i('has_diffuse_texture', 0);
-		$this->shader->uniform3f('diffuse_color', 0.91, 0.28, 0.22);
+		// // set the color 
+		// $this->shader->uniform1i('has_diffuse_texture', 0);
+		// $this->shader->uniform3f('diffuse_color', 0.91, 0.28, 0.22);
 
 		foreach($entities->fetch(Drawable3D::class, Transform3D::class) as $entity)
 		{
 			// set the tranformation uniform
 			$this->shader->setTransformationMatrix($entity->transform->getMatrix());
 
+			// set the texture
+			if ($entity->diffuseMap) {
+				if ($entity->sepcularMap) {
+					$this->shader->setTexture($entity->diffuseMap, $entity->sepcularMap);
+				} else {
+					$this->shader->setTexture($entity->diffuseMap);
+				}
+			}
+
     		// load the mesh
-    		$this->meshes->get('primitives.cube')->draw();
+    		$this->meshes->get($entity->mesh)->draw();
 		}
 	}
 }

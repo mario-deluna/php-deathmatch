@@ -25,8 +25,8 @@ class CameraSystem extends System
 	 */
 	protected $window;
 
-	public $cameraSpeed = 0.2;
-	public $cameraFriction = 0.8;
+	public $cameraSpeed = 0.05;
+	public $cameraFriction = 0.6;
 
 	protected $speedX = 0;
 	protected $speedZ = 0;
@@ -53,11 +53,17 @@ class CameraSystem extends System
 	 */
 	public function update(Registry $entities) 
 	{
+		$cameraSpeed = $this->cameraSpeed;
+
+		if ($this->window->getKeyState(GLFW_KEY_LEFT_SHIFT) === GLFW_PRESS) {
+	        $cameraSpeed *= 10;
+	    } 
+
 		// Update Camera Z
 		if ($this->window->getKeyState(GLFW_KEY_W) === GLFW_PRESS) {
-	        $this->speedZ += $this->cameraSpeed;
+	        $this->speedZ += $cameraSpeed;
 	    } elseif ($this->window->getKeyState(GLFW_KEY_S) === GLFW_PRESS) {
-	        $this->speedZ -= $this->cameraSpeed;
+	        $this->speedZ -= $cameraSpeed;
 	    }
 
 	    $this->speedZ *= $this->cameraFriction;
@@ -65,9 +71,9 @@ class CameraSystem extends System
 
 	    // Update Camera X
 	    if ($this->window->getKeyState(GLFW_KEY_A) === GLFW_PRESS) {
-	        $this->speedX += $this->cameraSpeed;
+	        $this->speedX += $cameraSpeed;
 	    } elseif ($this->window->getKeyState(GLFW_KEY_D) === GLFW_PRESS) {
-	        $this->speedX -= $this->cameraSpeed;
+	        $this->speedX -= $cameraSpeed;
 	    }
 
 	    $this->speedX *= $this->cameraFriction;

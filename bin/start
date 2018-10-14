@@ -46,21 +46,38 @@ $loop = $container->get('loop');
  * Load the meshes
  */
 LOG_title("Loading meshes");
+foreach([
+    'terrain'
+] as $file) {
+    LOG_info("loading $file");
+
+    $objParser = new \PGF\Mesh\ObjParser();
+    $container->get('mesh_manager')->add(
+        $file, $objParser->parse(file_get_contents(PATH_MESH . "/$file.obj"))
+    );
+} 
 
 // test
 $scene = $loop->getCurrentScene();
 
 use glm\vec3;
 
+$terrainD = new PGF\Texture\Texture(PATH_TEXUTRE . '/terrain_d.jpg');
+$terrainS = new PGF\Texture\Texture(PATH_TEXUTRE . '/terrain_s.jpg');
+
 $cube = new PGF\Entity\Primitives\Cube(
-    new vec3(0, 0, 0), 
-    new vec3(1, 1, 1), 
+    new vec3(0, -100, 0), 
+    new vec3(1000, 1000, 1000), 
     new vec3(0, 0, 0)
 );
 
+$cube->mesh = "terrain";
+$cube->diffuseMap = $terrainD;
+$cube->sepcularMap = $terrainS;
+
 $scene->entities->add($cube);
 
-$container->get('camera.main_perspective')->position->z = 10;
+$container->get('camera.main_perspective')->position = new vec3(-135.068733, 60.054232, -195.810322);
 
 /**
  * Start the main loop
@@ -80,14 +97,14 @@ $shader->use();
 $shader->setProjectionMatrx(\glm\value_ptr($camera->getProjectionMatrx()));
 $shader->setViewMatrx(\glm\value_ptr($camera->getViewMatrix()));
 $shader->setViewPosition($camera->position);
-$shader->setLightPosition(\glm\vec3(20, 1, 50));
+$shader->setLightPosition(\glm\vec3(1, 10, 1));
 
 die;
 
 /**
  * Create a camera
  */
-$camera = new PerspectiveCamera(new vec3(0.0, -15.0, 0.0));
+$camera = new PerspectiveCamera(new vec3(-149.268480, 30.353672, -52.326704));
 
 /**
  * Create a new scene

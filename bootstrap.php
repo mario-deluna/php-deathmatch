@@ -18,6 +18,7 @@ define('PATH_RESOURCES', __DIR__ . DS . 'resources');
 define('PATH_CACHE', __DIR__ . DS . 'cache');
 define('PATH_SHADER', PATH_RESOURCES . DS . 'shader');
 define('PATH_TEXUTRE', PATH_RESOURCES . DS . 'textures');
+define('PATH_MESH', PATH_RESOURCES . DS . 'meshes');
 
 /**
  * Log helpers
