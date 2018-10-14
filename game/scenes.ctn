@@ -2,3 +2,4 @@
  * The main scene
  */
 @scene.main: PD\Scene\MainScene
+	- addSystem(@system.draw3D)

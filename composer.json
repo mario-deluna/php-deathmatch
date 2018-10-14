@@ -9,7 +9,8 @@
     "require": {
         "ext-glfw": "*",
         "clancats/container": "^1.0",
-        "mario-deluna/php-game-framework": "dev-master"
+        "mario-deluna/php-game-framework": "dev-master",
+        "mario-deluna/glm": "dev-master"
     },
     "autoload": {
         "psr-4": {

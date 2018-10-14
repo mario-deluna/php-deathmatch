@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "1da5251ccd9c36dfb7aa1e37646667d1",
+    "content-hash": "a22e7062c56d1c9d410075824c154c12",
     "packages": [
         {
             "name": "clancats/container",
@@ -37,49 +37,17 @@
             "time": "2018-04-11T16:26:19+00:00"
         },
         {
-            "name": "mario-deluna/php-game-framework",
+            "name": "mario-deluna/glm",
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/mario-deluna/php-game-framework.git",
-                "reference": "674d19f4cf478d0a01a81523dceb8baa45a7f6ef"
+                "url": "https://github.com/mario-deluna/glm.git",
+                "reference": "d8871b2a2bb404a3ec4d631782dd6847a9519586"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mario-deluna/php-game-framework/zipball/674d19f4cf478d0a01a81523dceb8baa45a7f6ef",
-                "reference": "674d19f4cf478d0a01a81523dceb8baa45a7f6ef",
-                "shasum": ""
-            },
-            "require": {
-                "ponup/glm": "^1.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "PGF\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "authors": [
-                {
-                    "name": "Mario Döring",
-                    "email": "mario@clancats.com"
-                }
-            ],
-            "time": "2018-05-26 11:21:04"
-        },
-        {
-            "name": "ponup/glm",
-            "version": "1.0.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Ponup/glm.git",
-                "reference": "055e15ac9c2b5b4b99d92092d1137ee4cf74f89a"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Ponup/glm/zipball/055e15ac9c2b5b4b99d92092d1137ee4cf74f89a",
-                "reference": "055e15ac9c2b5b4b99d92092d1137ee4cf74f89a",
+                "url": "https://api.github.com/repos/mario-deluna/glm/zipball/d8871b2a2bb404a3ec4d631782dd6847a9519586",
+                "reference": "d8871b2a2bb404a3ec4d631782dd6847a9519586",
                 "shasum": ""
             },
             "require-dev": {
@@ -105,14 +73,47 @@
                 }
             ],
             "description": "A port of the OpenGL Mathematics library (GLM) to PHP",
-            "time": "2018-01-18T21:35:33+00:00"
+            "time": "2018-10-11 19:24:06"
+        },
+        {
+            "name": "mario-deluna/php-game-framework",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mario-deluna/php-game-framework.git",
+                "reference": "7009520983b15055cc3a29946f8a2bd85c45f846"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mario-deluna/php-game-framework/zipball/7009520983b15055cc3a29946f8a2bd85c45f846",
+                "reference": "7009520983b15055cc3a29946f8a2bd85c45f846",
+                "shasum": ""
+            },
+            "require": {
+                "mario-deluna/glm": "dev-master"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "PGF\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "Mario Döring",
+                    "email": "mario@clancats.com"
+                }
+            ],
+            "time": "2018-10-14 17:26:09"
         }
     ],
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "mario-deluna/php-game-framework": 20
+        "mario-deluna/php-game-framework": 20,
+        "mario-deluna/glm": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

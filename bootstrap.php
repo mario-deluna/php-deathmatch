@@ -20,6 +20,30 @@ define('PATH_SHADER', PATH_RESOURCES . DS . 'shader');
 define('PATH_TEXUTRE', PATH_RESOURCES . DS . 'textures');
 
 /**
+ * Log helpers
+ */
+function LOG_title(string $title)
+{
+	echo "\n\033[35m{$title}\n" . str_repeat('=', strlen($title)) . "\n";
+}
+
+function LOG_info(string $info)
+{
+	echo "\033[36m -> {$info}\n";
+}
+
+function LOG_success(string $info)
+{
+	echo "\033[32m ✅  {$info}\n";
+}
+
+function LOG_error(string $info)
+{
+	echo "\033[31m 🤬  {$info}\n"; die;
+}
+
+
+/**
  *---------------------------------------------------------------
  * Setup the Container
  *---------------------------------------------------------------

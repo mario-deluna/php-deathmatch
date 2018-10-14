@@ -9,3 +9,13 @@
  * The main loop
  */
 @loop: PD\MainLoop(@window, @scene.main)
+
+/**
+ * The main camera
+ */
+@camera.main_perspective: PGF\Camera\PerspectiveCamera
+
+/**
+ * Mesh manager
+ */
+@mesh_manager: PGF\Mesh\MeshManager

@@ -42,7 +42,29 @@ $window->setSwapInterval(1);
 // get the main loop
 $loop = $container->get('loop');
 
-// start the main loop
+/**
+ * Load the meshes
+ */
+LOG_title("Loading meshes");
+
+// test
+$scene = $loop->getCurrentScene();
+
+use glm\vec3;
+
+$cube = new PGF\Entity\Primitives\Cube(
+    new vec3(0, 0, 0), 
+    new vec3(1, 1, 1), 
+    new vec3(0, 0, 0)
+);
+
+$scene->entities->add($cube);
+
+$container->get('camera.main_perspective')->position->z = 10;
+
+/**
+ * Start the main loop
+ */
 $loop->start();
 
 die;

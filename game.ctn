@@ -17,3 +17,8 @@ import game/shaders
   * Import the scenes
   */
 import game/scenes
+
+ /**
+  * Import the systems
+  */
+import game/systems

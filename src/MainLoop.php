@@ -27,10 +27,23 @@ class MainLoop
 	}
 
 	/**
+	 * Get current sceen
+	 *
+	 * @return Scene
+	 */
+	public function getCurrentScene() : Scene
+	{
+		return $this->scene;
+	}
+
+	/**
 	 * Start the main loop 
 	 */
 	public function start()
 	{
+		// enable deph test
+		glEnable(GL_DEPTH_TEST);
+
 		while (!$this->window->shouldClose())
 		{   
 		    // poll window events
