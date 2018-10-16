@@ -13,7 +13,7 @@
 /**
  * The main camera
  */
-@camera.main_perspective: PGF\Camera\PerspectiveCamera
+@camera.player: PD\Camera\PlayerCamera
 
 /**
  * Mesh manager

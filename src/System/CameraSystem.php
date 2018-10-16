@@ -86,6 +86,24 @@ class CameraSystem extends System
 
 	    $this->camera->updateAngel($offx, $offy);
 	    $this->lastCursorX = $x; $this->lastCursorY = $y;
+
+	    // Update camera rendering mode
+	    if ($this->window->getKeyState(GLFW_KEY_1) === GLFW_PRESS) {
+	    	$this->camera->renderingMode = 3;
+	    } elseif ($this->window->getKeyState(GLFW_KEY_2) === GLFW_PRESS) {
+	        $this->camera->renderingMode = 1;
+	    } elseif ($this->window->getKeyState(GLFW_KEY_3) === GLFW_PRESS) {
+	        $this->camera->renderingMode = 0;
+	    } elseif ($this->window->getKeyState(GLFW_KEY_4) === GLFW_PRESS) {
+	        $this->camera->renderingMode = 2;
+	    }
+
+	    // update time of day
+	    if ($this->window->getKeyState(GLFW_KEY_P) === GLFW_PRESS) {
+	    	$this->camera->timeOfDay += 1;
+	    } elseif ($this->window->getKeyState(GLFW_KEY_O) === GLFW_PRESS) {
+	        $this->camera->timeOfDay -= 1;
+	    }
 	}
 
 	/**

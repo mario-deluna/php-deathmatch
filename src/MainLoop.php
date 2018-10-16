@@ -15,7 +15,7 @@ class MainLoop
 	 *
 	 * @var array[double]
 	 */
-	protected $clearColor = [0, 0, 0];
+	protected $clearColor = [0.33,0.40,0.50];
 
 	/**
 	 * Construct

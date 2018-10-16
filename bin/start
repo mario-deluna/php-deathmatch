@@ -21,6 +21,7 @@ $container = require __DIR__ . DS . '..' . DS . 'bootstrap.php';
  *
  * Hints etc.
  */
+LOG_title("Initializing window");
 $window = $container->get('window');
 
 // configure the window
@@ -55,8 +56,10 @@ foreach([
     $container->get('mesh_manager')->add(
         $file, $objParser->parse(file_get_contents(PATH_MESH . "/$file.obj"))
     );
+    LOG_success("done.");
 } 
 
+LOG_title("Preparing scene");
 // test
 $scene = $loop->getCurrentScene();
 
@@ -64,6 +67,8 @@ use glm\vec3;
 
 $terrainD = new PGF\Texture\Texture(PATH_TEXUTRE . '/terrain_d.jpg');
 $terrainS = new PGF\Texture\Texture(PATH_TEXUTRE . '/terrain_s.jpg');
+$planksD = new PGF\Texture\Texture(PATH_TEXUTRE . '/planks_diff.jpg');
+$planksS = new PGF\Texture\Texture(PATH_TEXUTRE . '/planks_spec.jpg');
 
 $cube = new PGF\Entity\Primitives\Cube(
     new vec3(0, -100, 0), 
@@ -77,11 +82,26 @@ $cube->sepcularMap = $terrainS;
 
 $scene->entities->add($cube);
 
-$container->get('camera.main_perspective')->position = new vec3(-135.068733, 60.054232, -195.810322);
+$container->get('camera.player')->position = new vec3(-107.748796, 48.238427, -64.907317);
+
+// cube
+$cube = new PGF\Entity\Primitives\Cube(
+    new vec3(-107.748796, 48.238427, -64.907317), 
+    new vec3(5, 1, 5), 
+    new vec3(0, 0, 0)
+);
+$cube->diffuseMap = $planksD;
+$cube->sepcularMap = $planksS;
+$cube->textureScaleX = 8;
+$cube->textureScaleY = 8;
+
+$scene->entities->add($cube);
+
 
 /**
  * Start the main loop
  */
+LOG_title("Starting main loop");
 $loop->start();
 
 die;

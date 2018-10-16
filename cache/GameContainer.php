@@ -15,9 +15,9 @@ protected $metadata = array (
 protected $metadataService = array (
 );
 
-protected $serviceResolverType = ['window' => 0, 'loop' => 0, 'camera.main_perspective' => 0, 'mesh_manager' => 0, 'shader_manager' => 0, 'shader.simple3D' => 0, 'scene.main' => 0, 'system.draw3D' => 0, 'system.camera' => 0];
+protected $serviceResolverType = ['window' => 0, 'loop' => 0, 'camera.player' => 0, 'mesh_manager' => 0, 'shader_manager' => 0, 'shader.simple3D' => 0, 'scene.main' => 0, 'system.draw3D' => 0, 'system.camera' => 0];
 
-protected $resolverMethods = ['window' => 'resolveWindow', 'loop' => 'resolveLoop', 'camera.main_perspective' => 'resolveCameraMainPerspective', 'mesh_manager' => 'resolveMeshManager', 'shader_manager' => 'resolveShaderManager', 'shader.simple3D' => 'resolveShaderSimple3D', 'scene.main' => 'resolveSceneMain', 'system.draw3D' => 'resolveSystemDraw3D', 'system.camera' => 'resolveSystemCamera'];
+protected $resolverMethods = ['window' => 'resolveWindow', 'loop' => 'resolveLoop', 'camera.player' => 'resolveCameraPlayer', 'mesh_manager' => 'resolveMeshManager', 'shader_manager' => 'resolveShaderManager', 'shader.simple3D' => 'resolveShaderSimple3D', 'scene.main' => 'resolveSceneMain', 'system.draw3D' => 'resolveSystemDraw3D', 'system.camera' => 'resolveSystemCamera'];
 
 protected function resolveWindow() {
 	$instance = new \PGF\Window();
@@ -29,9 +29,9 @@ protected function resolveLoop() {
 	$this->resolvedSharedServices['loop'] = $instance;
 	return $instance;
 }
-protected function resolveCameraMainPerspective() {
-	$instance = new \PGF\Camera\PerspectiveCamera();
-	$this->resolvedSharedServices['camera.main_perspective'] = $instance;
+protected function resolveCameraPlayer() {
+	$instance = new \PD\Camera\PlayerCamera();
+	$this->resolvedSharedServices['camera.player'] = $instance;
 	return $instance;
 }
 protected function resolveMeshManager() {
@@ -58,12 +58,12 @@ protected function resolveSceneMain() {
 	return $instance;
 }
 protected function resolveSystemDraw3D() {
-	$instance = new \PD\System\Draw3DSystem($this->resolvedSharedServices['shader.simple3D'] ?? $this->resolvedSharedServices['shader.simple3D'] = $this->resolveShaderSimple3D(), $this->resolvedSharedServices['camera.main_perspective'] ?? $this->resolvedSharedServices['camera.main_perspective'] = $this->resolveCameraMainPerspective(), $this->resolvedSharedServices['mesh_manager'] ?? $this->resolvedSharedServices['mesh_manager'] = $this->resolveMeshManager());
+	$instance = new \PD\System\Draw3DSystem($this->resolvedSharedServices['shader.simple3D'] ?? $this->resolvedSharedServices['shader.simple3D'] = $this->resolveShaderSimple3D(), $this->resolvedSharedServices['camera.player'] ?? $this->resolvedSharedServices['camera.player'] = $this->resolveCameraPlayer(), $this->resolvedSharedServices['mesh_manager'] ?? $this->resolvedSharedServices['mesh_manager'] = $this->resolveMeshManager());
 	$this->resolvedSharedServices['system.draw3D'] = $instance;
 	return $instance;
 }
 protected function resolveSystemCamera() {
-	$instance = new \PD\System\CameraSystem($this->resolvedSharedServices['camera.main_perspective'] ?? $this->resolvedSharedServices['camera.main_perspective'] = $this->resolveCameraMainPerspective(), $this->resolvedSharedServices['window'] ?? $this->resolvedSharedServices['window'] = $this->resolveWindow());
+	$instance = new \PD\System\CameraSystem($this->resolvedSharedServices['camera.player'] ?? $this->resolvedSharedServices['camera.player'] = $this->resolveCameraPlayer(), $this->resolvedSharedServices['window'] ?? $this->resolvedSharedServices['window'] = $this->resolveWindow());
 	$this->resolvedSharedServices['system.camera'] = $instance;
 	return $instance;
 }

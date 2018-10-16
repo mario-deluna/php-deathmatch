@@ -36,6 +36,13 @@ class Draw3DSystem extends System
 	protected $meshes;
 
 	/**
+	 * Light position
+	 *
+	 * @var vec3
+	 */
+	public $lightPosition = null;
+
+	/**
 	 * Construct
 	 */
 	public function __construct(Simple3DShader $shader, PerspectiveCamera $camera, MeshManager $meshes)
@@ -43,6 +50,9 @@ class Draw3DSystem extends System
 		$this->shader = $shader;
 		$this->camera = $camera;
 		$this->meshes = $meshes;
+
+		// set inital light position
+		$this->lightPosition = \glm\vec3(0, 1000, 0);
 	}
 
 	/**
@@ -66,7 +76,14 @@ class Draw3DSystem extends System
 		$this->shader->setProjectionMatrx(\glm\value_ptr($this->camera->getProjectionMatrx()));
 		$this->shader->setViewMatrx(\glm\value_ptr($this->camera->getViewMatrix()));
 		$this->shader->setViewPosition($this->camera->position);
-		$this->shader->setLightPosition(\glm\vec3(0, 1000, 0));
+
+
+		$this->lightPosition->x = cos($this->camera->timeOfDay / 100) * 3000;
+		$this->lightPosition->y = sin($this->camera->timeOfDay / 100) * 3000;
+		$this->lightPosition->z = 200;
+		$this->shader->setLightPosition($this->lightPosition);
+
+		$this->shader->uniform1i('mode', $this->camera->renderingMode);
 
 		// // set the color 
 		// $this->shader->uniform1i('has_diffuse_texture', 0);
@@ -85,6 +102,8 @@ class Draw3DSystem extends System
 					$this->shader->setTexture($entity->diffuseMap);
 				}
 			}
+
+			$this->shader->setTextureScale($entity->textureScaleX, $entity->textureScaleY);
 
     		// load the mesh
     		$this->meshes->get($entity->mesh)->draw();
